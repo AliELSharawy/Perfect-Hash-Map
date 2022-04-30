@@ -1,10 +1,10 @@
 import java.util.*;
-import java.util.stream.Stream;
 
 public class PerfectHashMapQuadSpace {
 
     protected Set<Integer> setOfKeys;
     protected final Util util;
+    private List<MapEntry> quadHashTable;
     protected int totalSpace;
     protected int[][] hashFn;
 
@@ -27,21 +27,29 @@ public class PerfectHashMapQuadSpace {
         return util.decimal_value(hash_value);
     }
 
-    protected List<Integer> hash_using_quadratic_space_sol(Set<Integer> setOfKeys) {
+    protected List<MapEntry> hash_using_quadratic_space_sol(Set<Integer> setOfKeys) {
         int table_size = (int) Math.pow(setOfKeys.size(), 2);
-        int[] hash_table = new int[table_size];
+        MapEntry[] hash_table = new MapEntry[table_size];
         int b = (int) (Math.log(table_size) / Math.log(2));
         hashFn = util.get_random_hash_fn(b, 32);
         for (int key : setOfKeys) {
             int hash_value = hash(key, hashFn);
-            if (hash_table[hash_value] != 0)
+            if (hash_table[hash_value] != null && hash_table[hash_value].getKey() != 0)
                 return hash_using_quadratic_space_sol(setOfKeys);
-            hash_table[hash_value] = key;
+            hash_table[hash_value] = new MapEntry(key);
         }
-        return Arrays.stream(hash_table).boxed().toList();
+        return Arrays.stream(hash_table).toList();
     }
 
+    public int getValue(int key) {
+       int index = hash(key, hashFn);
+       return quadHashTable.get(index).getValue();
+    }
 
+    public void setValue(int key, int value) {
+        int index = hash(key, hashFn);
+        quadHashTable.get(index).setValue(value);
+    }
 
     public void setKeys(Set<Integer> keys) {
         this.setOfKeys = keys;
@@ -51,7 +59,7 @@ public class PerfectHashMapQuadSpace {
         return totalSpace = (int) Math.pow(setOfKeys.size(), 2);
     }
 
-    public List<Integer> getQuadHashTable() {
-        return hash_using_quadratic_space_sol(setOfKeys);
+    public List<MapEntry> getQuadHashTable() {
+        return quadHashTable = hash_using_quadratic_space_sol(setOfKeys);
     }
 }

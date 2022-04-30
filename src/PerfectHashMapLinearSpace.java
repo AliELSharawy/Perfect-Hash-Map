@@ -1,11 +1,10 @@
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class PerfectHashMapLinearSpace extends PerfectHashMapQuadSpace{
 
     private final List<Set<Integer>> level1HashTable;
-    private final List<List<Integer>> linearHashTable;
-    private int[][][] listHashFn;
+    private final List<List<MapEntry>> linearHashTable;
+    private final int[][][] listHashFn;
 
     public PerfectHashMapLinearSpace(Set<Integer> setOfKeys) {
         super(setOfKeys);
@@ -49,11 +48,25 @@ public class PerfectHashMapLinearSpace extends PerfectHashMapQuadSpace{
     }
 
     @Override
+    public int getValue(int key) {
+        int slotIndex = hash(key, listHashFn[0]);
+        int level2Index = hash(key, listHashFn[slotIndex + 1]);
+        return linearHashTable.get(slotIndex).get(level2Index).getValue();
+    }
+
+    @Override
+    public void setValue(int key, int value) {
+        int slotIndex = hash(key, listHashFn[0]);
+        int level2Index = hash(key, listHashFn[slotIndex + 1]);
+        linearHashTable.get(slotIndex).get(level2Index).setValue(value);
+    }
+
+    @Override
     public int getTotalSpace() {
         return totalSpace;
     }
 
-    public List<List<Integer>> getLinearHashTable() {
+    public List<List<MapEntry>> getLinearHashTable() {
         return linearHashTable;
     }
 }
