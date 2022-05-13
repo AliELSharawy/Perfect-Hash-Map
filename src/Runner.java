@@ -6,7 +6,7 @@ public class Runner {
         HashSet<Integer> setOfKeys = new HashSet<>();
         Random random = new Random();
         for (int i = 0; i < 10; i++) {
-//            setOfKeys.add(Math.abs(random.nextInt()) % (int)Math.pow(2, 32));
+            setOfKeys.add(Math.abs(random.nextInt()) % (int)Math.pow(2, 32));
             setOfKeys.add((i + 1) % (int) Math.pow(2, 32));
         }
         PerfectHashMapQuadSpace map = new PerfectHashMapQuadSpace(setOfKeys);
