@@ -5,14 +5,16 @@ public class PerfectHashMapQuadSpace {
     protected Set<Integer> setOfKeys;
     protected final Util util;
     private List<MapEntry> quadHashTable;
-    protected int totalSpace;
     protected int[][] hashFn;
+    protected int totalSpace;
+    protected int noTimesRebuild;
 
 
     public PerfectHashMapQuadSpace(Set<Integer> setOfKeys) {
         this.setOfKeys = setOfKeys;
         util = new Util();
         totalSpace = 0;
+        noTimesRebuild = 0;
     }
 
     protected int hash(int key, int[][] hash_fn) {
@@ -34,8 +36,10 @@ public class PerfectHashMapQuadSpace {
         hashFn = util.get_random_hash_fn(b, 32);
         for (int key : setOfKeys) {
             int hash_value = hash(key, hashFn);
-            if (hash_table[hash_value] != null && hash_table[hash_value].getKey() != 0)
+            if (hash_table[hash_value] != null && hash_table[hash_value].getKey() != 0) {
+                noTimesRebuild++;
                 return hash_using_quadratic_space_sol(setOfKeys);
+            }
             hash_table[hash_value] = new MapEntry(key);
         }
         return Arrays.stream(hash_table).toList();
@@ -57,6 +61,9 @@ public class PerfectHashMapQuadSpace {
 
     public int getTotalSpace() {
         return totalSpace = (int) Math.pow(setOfKeys.size(), 2);
+    }
+    public int getNoTimesRebuild() {
+        return noTimesRebuild;
     }
 
     public List<MapEntry> getQuadHashTable() {

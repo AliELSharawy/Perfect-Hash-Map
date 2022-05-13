@@ -66,6 +66,11 @@ public class PerfectHashMapLinearSpace extends PerfectHashMapQuadSpace{
         return totalSpace;
     }
 
+    @Override
+    public int getNoTimesRebuild() {
+        return noTimesRebuild;
+    }
+
     public List<List<MapEntry>> getLinearHashTable() {
         return linearHashTable;
     }
